@@ -7,7 +7,9 @@ const express = require("express")
 const port = process.env.PORT || 5000
 const app = express()
 const cors = require("cors")
+const morgan = require("morgan")
 app.use(cors())
+app.use(morgan("dev"))
 app.use(express.json())
 
 
@@ -29,6 +31,8 @@ async function run() {
     await client.connect();
     const viewCollegeCollection = client.db("amari-college").collection("viewCollege");
     const allClassesCollection = client.db("amari-college").collection("allClasses");
+    const myCollegeCollection = client.db("amari-college").collection("myCollege");
+    const feedbackCollection = client.db("amari-college").collection("feedback");
 
 
     
@@ -52,22 +56,16 @@ async function run() {
             res.send(allClasses)
         })
 
+        // My College data get 
+        app.get("/myCollege", async (req, res) =>{
+            const myCollege = await myCollegeCollection.find({ email: req.query.email }).toArray()
+            res.send(myCollege)
+        })
 
 
-        app.post("/my-college", async (req, res) => {
+        app.post("/myCollege", async (req, res) =>{
           const data = req.body
-          const college = {
-            photo_url: data.image,
-            name: data.name,
-            email: data.email,
-            subject: data.subject,
-            phone: data.phone,
-            dateOfBirth: data.dateOfBirth,
-            address: data.address
-          }
-
-          console.log(college)
-          const result = await my-college-collection.insertOne(college)
+          const result = await myCollegeCollection.insertOne(data)
           res.send(result)
         })
 
