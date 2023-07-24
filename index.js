@@ -62,13 +62,22 @@ async function run() {
             res.send(myCollege)
         })
 
-
+        // My College Post data 
         app.post("/myCollege", async (req, res) =>{
           const data = req.body
           const result = await myCollegeCollection.insertOne(data)
           res.send(result)
         })
 
+
+        // Feedback get data 
+        app.get("/feedback", async (req, res) =>{
+          const feedback = await feedbackCollection.find().toArray(
+            res.send(feedback)
+          )
+        })
+
+        
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
