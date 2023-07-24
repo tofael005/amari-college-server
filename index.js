@@ -72,12 +72,16 @@ async function run() {
 
         // Feedback get data 
         app.get("/feedback", async (req, res) =>{
-          const feedback = await feedbackCollection.find().toArray(
+          const feedback = await feedbackCollection.find().limit(10).toArray()
             res.send(feedback)
-          )
         })
 
-        
+        // Feedback post data 
+        app.post("/feedback", async (req, res) =>{
+          const data = req.body
+          const result = await feedbackCollection.insertOne(data)
+          res.send(result)
+        })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
